@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Available Services - Household Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Available Services</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search services..." value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="card-text">{{ service.description }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Base Price: ${{ "%.2f"|format(service.base_price) }}<br>
+                            Time Required: {{ service.time_required }}
+                        </small>
+                    </p>
+                    <a href="{{ url_for('customer.request_service', service_id=service.id) }}" class="btn btn-primary">Request Service</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

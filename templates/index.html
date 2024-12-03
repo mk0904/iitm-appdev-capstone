@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Household Services{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">Welcome to Household Services</h1>
+    <p class="lead">Your one-stop solution for all household services</p>
+    
+    {% if not session.get('user_id') %}
+    <div class="mt-4">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary me-2">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-success">Register</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">For Customers</h5>
+                <p class="card-text">Book services for your home maintenance needs</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">For Professionals</h5>
+                <p class="card-text">Join our network of service providers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Quality Service</h5>
+                <p class="card-text">Verified professionals and guaranteed satisfaction</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

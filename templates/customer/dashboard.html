@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Dashboard - Household Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">My Service Requests</h2>
+    
+    <div class="mb-4">
+        <a href="{{ url_for('customer.services') }}" class="btn btn-primary">Request New Service</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Date Requested</th>
+                    <th>Status</th>
+                    <th>Professional</th>
+                    <th>Completion Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in service_requests %}
+                <tr>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.date_of_request.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>
+                        {% if request.professional_id %}
+                            {{ request.professional.username }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if request.date_of_completion %}
+                            {{ request.date_of_completion.strftime('%Y-%m-%d') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

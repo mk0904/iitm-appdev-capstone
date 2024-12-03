@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Household Services{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Services</h5>
+                <p class="card-text">Add, edit, or remove services</p>
+                <a href="{{ url_for('admin.manage_services') }}" class="btn btn-primary">Manage Services</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Verify Professionals</h5>
+                <p class="card-text">Review and approve service professionals</p>
+                <a href="{{ url_for('admin.verify_professionals') }}" class="btn btn-primary">View Professionals</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">User Management</h5>
+                <p class="card-text">Manage customers and professionals</p>
+                <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">Manage Users</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">p
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Service Requests</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Service</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in service_requests %}
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.service.name }}</td>
+                                <td>{{ request.customer.username }}</td>
+                                <td>{{ request.status }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.view_request', request_id=request.id) }}" class="btn btn-sm btn-info">View</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Pending Verifications</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Service Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for professional in pending_professionals %}
+                            <tr>
+                                <td>{{ professional.id }}</td>
+                                <td>{{ professional.user.username }}</td>
+                                <td>{{ professional.service_type }}</td>
+                                <td>
+                                    <form action="{{ url_for('admin.verify_professional') }}" method="post" style="display:inline;">
+                                        <input type="hidden" name="professional_id" value="{{ professional.id }}">
+                                        <button type="submit" class="btn btn-sm btn-success">Verify</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Service Requests Over Time</h5>
+                <canvas id="serviceRequestsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('serviceRequestsChart').getContext('2d');
+    var serviceRequestsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ last_six_months|tojson }},
+            datasets: [{
+                label: 'Service Requests',
+                data: {{ request_data|tojson }},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

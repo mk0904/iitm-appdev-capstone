@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Professionals{% endblock %}
+
+{% block content %}
+<h2>Verify Professionals</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Service Type</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for professional in professionals %}
+        <tr>
+            <td>{{ professional.id }}</td>
+            <td>{{ professional.user.username }}</td>
+            <td>{{ professional.service_type }}</td>
+            <td>
+               <form action="{{ url_for('admin.verify_professional') }}" method="post" style="display:inline;">
+                    <input type="hidden" name="professional_id" value="{{ professional.id }}">
+                    <button type="submit" class="btn btn-sm btn-success">Verify</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Professional Dashboard - Household Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Professional Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">My Profile</h5>
+                    <p class="card-text">
+                        Service Type: {{ professional.service_type }}<br>
+                        Experience: {{ professional.experience }} years<br>
+                        Status: {% if professional.is_verified %}Verified{% else %}Pending Verification{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Available Service Requests</h3>
+    <div class="table-responsive mb-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Customer</th>
+                    <th>Date Requested</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in available_requests %}
+                <tr>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.customer.username }}</td>
+                    <td>{{ request.date_of_request.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('professional.accept_request', request_id=request.id) }}" 
+                           class="btn btn-sm btn-primary">Accept</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="mb-3">My Active Requests</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Customer</th>
+                    <th>Date Requested</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in service_requests %}
+                <tr>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.customer.username }}</td>
+                    <td>{{ request.date_of_request.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>
+                        {% if request.status == 'assigned' %}
+                        <form method="POST" action="{{ url_for('professional.complete_request', request_id=request.id) }}"
+                              style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Mark Complete</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

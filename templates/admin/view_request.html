@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}View Service Request{% endblock %}
+
+{% block content %}
+<h2>Service Request Details</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Request ID: {{ request.id }}</h5>
+        <p class="card-text"><strong>Service:</strong> {{ request.service.name }}</p>
+        <p class="card-text"><strong>Customer:</strong> {{ request.customer.username }}</p>
+        <p class="card-text"><strong>Status:</strong> {{ request.status }}</p>
+        <p class="card-text"><strong>Date of Request:</strong> {{ request.date_of_request }}</p>
+        <p class="card-text"><strong>Description:</strong> {{ request.description }}</p>
+    </div>
+</div>
+
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary mt-3">Back to Dashboard</a>
+{% endblock %}
